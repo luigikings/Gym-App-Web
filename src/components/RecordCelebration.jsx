@@ -5,9 +5,11 @@ import { Trophy } from 'lucide-react'
 
 export default function RecordCelebration({ brokenRecords, onClose }) {
   useEffect(() => {
+    let cancelled = false
     const duration = 1500
     const end = Date.now() + duration
     ;(function frame() {
+      if (cancelled) return
       confetti({
         particleCount: 4,
         angle: 60,
@@ -24,6 +26,10 @@ export default function RecordCelebration({ brokenRecords, onClose }) {
       })
       if (Date.now() < end) requestAnimationFrame(frame)
     })()
+    return () => {
+      cancelled = true
+      confetti.reset()
+    }
   }, [])
 
   return (
